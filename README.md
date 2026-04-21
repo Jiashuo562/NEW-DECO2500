@@ -68,4 +68,3 @@ it finishes you should receive code-completion and a bunch of other benefits:
 > [!WARNING]  
 > The **dummy-data.csv** is **NOT** the survey data. Please refer to our cleant
 > up survey data in the team drive.
-1
