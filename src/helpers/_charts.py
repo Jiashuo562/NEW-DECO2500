@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 from pandas import DataFrame, Series
 from numpy.typing import ArrayLike
+from textwrap import wrap
+
+
+def _wrap_labels(labels: ArrayLike, width: int = 18) -> list[str]:
+    """Wrap chart labels without truncating the underlying text."""
+
+    return ["\n".join(wrap(str(label), width=width)) for label in labels]
 
 
 def pie_chart(data: Series, title: str) -> None:
@@ -36,10 +43,12 @@ def bar_chart(categories: ArrayLike, category_freq: ArrayLike, title: str) -> No
     Refer to [Matplotlib](https://matplotlib.org/stable/plot_types/basic/bar.html)
     for more information
     """
-    _, ax = plt.subplots()
-    ax.bar(x=categories, height=category_freq)
+    _, ax = plt.subplots(figsize=(9, 5))
+    ax.bar(x=range(len(categories)), height=category_freq)
+    ax.set_xticks(range(len(categories)))
+    ax.set_xticklabels(_wrap_labels(categories), rotation=0)
     ax.set_title(title)
-    plt.xticks(rotation=45, ha='right')  # Add rotation to prevent overlaps
+    plt.tight_layout()
     plt.show()
 
 
@@ -51,9 +60,9 @@ def box_plot(likert_data: DataFrame, title: str, scale: str, vert: bool) -> None
         title (str): Title of the plot
     """
 
-    _, ax = plt.subplots()
-    ax.boxplot(likert_data, tick_labels=[
-               col[:10] + "..." for col in likert_data.columns], vert=vert)
+    _, ax = plt.subplots(figsize=(10, 5))
+    ax.boxplot(likert_data, tick_labels=_wrap_labels(likert_data.columns), vert=vert)
     plt.title(title)
     plt.xlabel(scale)  # Range for responses eg: (0 - 4)
+    plt.tight_layout()
     plt.show()
